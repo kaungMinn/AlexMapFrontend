@@ -1,0 +1,115 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+/* Customized scrollbar */
+::-webkit-scrollbar {
+  display: none;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: RGB(192, 192, 192);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: RGB(192, 192, 192);
+  border-radius: 20px;
+  border: 6px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(68, 20, 155);
+}
+
+/*
+Hide up - down arrow from browser using input type - number
+*/
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input:focus ~ label,
+input:not(:placeholder-shown) ~ label {
+  @apply transform;
+  @apply scale-75;
+}
+
+@layer utilities {
+}
+
+@layer base {
+  :root {
+    --color-success: #28b15a;
+    --color-warning: #ffa726;
+    --color-danger: #ff0000;
+  }
+
+  .light {
+    --color-primary: #6c2ae2;
+    --color-primary-light: #e4d6ff;
+    --color-primary-dark: #a288ea;
+
+    --color-secondary: #bc8f27;
+    --color-secondary-dark: #688f4e;
+
+    --color-default: #ffffff;
+    --color-default-light: #f5f7fb;
+    --color-default-dark: rgb(160, 158, 158);
+
+    --color-base-light: #000000;
+    --color-base-dark: #343434;
+  }
+
+  .dark {
+    --color-primary: #789ef4;
+    --color-primary-light: #6a899127;
+    --color-primary-dark: #364649;
+
+    --color-secondary: #bc8f27;
+
+    --color-secondary-dark: #688f4e;
+
+    --color-default-light: #012345;
+    --color-default-dark: #011435;
+
+    --color-base-light: #ffffff;
+    --color-base-dark: #757474;
+  }
+
+  .heading-font {
+    @apply text-[26px] leading-[25px] tracking-[.15px] antialiased tablet:text-[30px];
+  }
+
+  .sub-heading-font {
+    @apply text-lg leading-[25px] tracking-[.15px] antialiased;
+  }
+
+  .body-font {
+    @apply text-base antialiased laptop:text-sm;
+  }
+
+  .secondary-font {
+    @apply text-[0.8rem] antialiased;
+  }
+
+  .caption-font {
+    @apply text-sm antialiased laptop:text-xs;
+  }
+}
