@@ -1,5 +1,5 @@
 import { lazy } from "react";
-import { INSTALLATION, LIST_ROUTE, LOGIN_ROUTE, MAP_ROUTE, NOT_MATCH_ROUTE, REGISTER_ROUTE, ROOT_ROUTE } from "./routePaths";
+import { INSTALLATION, LIST_ROUTE, LOGIN_ROUTE, MAP_ROUTE, NOT_MATCH_ROUTE, REGISTER_ROUTE, ROOT_ROUTE, UPDATE_ROUTE } from "./routePaths";
 import { Navigate } from "react-router-dom";
 import NotMatch from "@/pages/NotMatch";
 
@@ -32,7 +32,8 @@ export const UNPROTECTED_ROUTE_LIST = [
 //PROTECTED
 const Map = lazy(() => import("@/pages/Map"));
 const Installation = lazy(() => import('@/pages/Installation'));
-const List = lazy(() => import("@/pages/List/NodeList"));
+const List = lazy(() => import("@/pages/List/LocationList"));
+const Update = lazy(() => import('@/pages/Update'));
 
 export const PROTECTED_ROUTE_LIST = [
     {
@@ -46,5 +47,9 @@ export const PROTECTED_ROUTE_LIST = [
     {
         path: INSTALLATION,
         element: <Installation />
+    },
+    {
+        path: UPDATE_ROUTE,
+        element: <Update />
     }
 ]

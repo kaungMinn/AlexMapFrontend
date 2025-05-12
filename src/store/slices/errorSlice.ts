@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { postLogin } from "../actions/authAction";
-import { getALlLocations, installLocation, updateLocation } from "../actions/locationAction";
+import { getALlLocations, getLocation, installLocation, updateLocation } from "../actions/locationAction";
 
 type DefaultInitialStateType = {
   isError: boolean;
@@ -57,6 +57,16 @@ const errorSlice = createSlice({
       }
     });
     builder.addCase(updateLocation.rejected, (state, action) => {
+      state.isError = true;
+      if (action.payload) {
+        state.statusCode = action.payload.status;
+        state.errorMessage = action.payload.data.message;
+      } else {
+        state.statusCode = 500;
+        state.errorMessage = "An unexpected error occurred.";
+      }
+    });
+    builder.addCase(getLocation.rejected, (state, action) => {
       state.isError = true;
       if (action.payload) {
         state.statusCode = action.payload.status;

@@ -15,7 +15,7 @@ import { BsFullscreenExit } from "react-icons/bs";
 export const ErrorBoxLayout: React.FC<ErrorBoxLayoutPropsType> = (props) => {
 
     return (
-        <div className="bg-default px-2 py-2 w-[25rem] h-auto">
+        <div className="bg-default px-2 py-2 w-[35vh] h-auto">
             <div className="space-y-6 ">
                 <div>
                     {props.icon}

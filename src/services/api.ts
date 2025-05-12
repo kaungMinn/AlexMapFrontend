@@ -21,17 +21,17 @@ const onRequest = async (
 ): Promise<InternalAxiosRequestConfig> => {
   const accessToken = getCookie(ACCESS_TOKEN);
 
-  /** For public api call - no need token to fetch - wJR */
   if (!accessToken) {
     return config;
   }
 
   const user: UserInformationType = jwtDecode(accessToken);
   const isExpired = user.exp * 1000 < new Date().getTime();
-  /** when access token expired - wJR */
+
   if (isExpired) {
     const response = await AuthService.refreshTheToken();
-    const accessToken = response?.data.accessToken;
+    console.log("response", response)
+    const accessToken = response?.data.details.accessToken;
     setCookie(ACCESS_TOKEN, accessToken);
     config.headers!.Authorization = `Bearer ${accessToken}`;
     return config;

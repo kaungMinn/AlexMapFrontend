@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getALlLocations, installLocation, LocationDetails, updateLocation } from "../actions/locationAction";
+import { getALlLocations, getLocation, installLocation, LocationDetails, updateLocation } from "../actions/locationAction";
 
 type InitialState = {
     message: string;
     locationDetails: LocationDetails;
     allLocations: LocationDetails[];
+    location: LocationDetails,
 }
 
 const LOCATION_DETAILS:LocationDetails =  {
@@ -20,6 +21,7 @@ const LOCATION_DETAILS:LocationDetails =  {
 const INITIAL_STATE:InitialState = {
     message: "",
     locationDetails : LOCATION_DETAILS,
+    location: LOCATION_DETAILS,
     allLocations: [],
 }
 const locationSlice = createSlice({
@@ -74,6 +76,20 @@ const locationSlice = createSlice({
         builder.addCase(updateLocation.rejected, (state) => {
             state.isLoading = false;
             state.isSuccess = false;
+        });
+
+        builder.addCase(getLocation.pending, (state) => {
+            state.isLoading = true;
+        });
+
+        builder.addCase(getLocation.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.isSuccess = true;
+            state.data.message = action.payload.message;
+            state.data.location = action.payload.details;
+        });
+        builder.addCase(getLocation.rejected, (state) => {
+            state.isLoading = false;
         })
     }
 });

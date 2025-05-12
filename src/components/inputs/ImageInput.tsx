@@ -1,19 +1,31 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { useDropzone, FileWithPath } from 'react-dropzone';
 import { FiUpload, FiX, FiImage } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Img } from 'react-image';
+import Loader from '@/icons/animatedIcons/Loader';
 
 type ImageUploadProps = {
     maxSizeMB?: number;
-    onFileChange: (file: FileWithPath | null) => void; // Changed to single file
+    initialImageUrl?: string | null; // Add prop for existing image URL
+    onFileChange: (file: FileWithPath | null) => void;
 };
 
 const ImageInput = ({
     maxSizeMB = 5,
+    initialImageUrl = null,
     onFileChange,
 }: ImageUploadProps) => {
-    const [file, setFile] = useState<FileWithPath | null>(null); // Single file state
+    const [file, setFile] = useState<FileWithPath | null>(null);
+    const [imageUrl, setImageUrl] = useState<string | null>(null); // For displaying URLs
     const [error, setError] = useState<string | null>(null);
+
+    // Initialize with existing image URL
+    useEffect(() => {
+        if (initialImageUrl) {
+            setImageUrl(initialImageUrl);
+        }
+    }, [initialImageUrl]);
 
     const onDrop = useCallback(
         (acceptedFiles: FileWithPath[], rejectedFiles: unknown[]) => {
@@ -26,10 +38,10 @@ const ImageInput = ({
                 return;
             }
 
-            // Always take the first file (single upload)
             const newFile = acceptedFiles[0] || null;
             setFile(newFile);
-            onFileChange(newFile); // Notify parent
+            setImageUrl(newFile ? URL.createObjectURL(newFile) : null); // Clear URL when removing file
+            onFileChange(newFile);
         },
         [maxSizeMB, onFileChange]
     );
@@ -38,13 +50,14 @@ const ImageInput = ({
         onDrop,
         accept: { 'image/*': ['.jpeg', '.jpg', '.png'] },
         maxSize: maxSizeMB * 1024 * 1024,
-        maxFiles: 1, // Enforce single file
-        multiple: false, // Disable multi-select
+        maxFiles: 1,
+        multiple: false,
     });
 
     const removeFile = () => {
         setFile(null);
-        onFileChange(null); // Notify parent
+        setImageUrl(null);
+        onFileChange(null);
     };
 
     return (
@@ -63,8 +76,7 @@ const ImageInput = ({
                 <input {...getInputProps()} />
                 <div className="flex flex-col items-center justify-center space-y-3">
                     <FiUpload
-                        className={`text-3xl ${isDragActive ? 'text-blue-500' : 'text-gray-400'
-                            }`}
+                        className={`text-3xl ${isDragActive ? 'text-blue-500' : 'text-gray-400'}`}
                     />
                     <p className="text-gray-600">
                         {isDragActive
@@ -88,16 +100,15 @@ const ImageInput = ({
                 </motion.p>
             )}
 
-            {/* Thumbnail */}
+            {/* Thumbnail - Shows either uploaded file or existing URL */}
             <AnimatePresence>
-                {file && (
-                    <div
-                        className="relative group rounded-lg overflow-hidden border border-gray-200   mx-auto"
-                    >
-                        <img
-                            src={URL.createObjectURL(file)}
-                            alt={file.name}
+                {(file || imageUrl) && (
+                    <div className="relative group rounded-lg overflow-hidden border border-gray-200 mx-auto">
+                        <Img
+                            src={file ? URL.createObjectURL(file) : imageUrl || ''}
+                            alt={file?.name || "Uploaded image"}
                             className="w-full h-48 object-contain"
+                            loader={<div className='h-48 flex items-center justify-center'><div className='w-[14rem]'><Loader /></div> </div>}
                         />
                         <button
                             type="button"
@@ -108,8 +119,8 @@ const ImageInput = ({
                         </button>
                         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2">
                             <p className="text-white text-xs truncate">
-                                {file.name.substring(0, 30)}
-                                {file.name.length > 30 && '...'}
+                                {file?.name.substring(0, 30) || "Existing image"}
+                                {file?.name && file.name.length > 30 && '...'}
                             </p>
                         </div>
                     </div>
@@ -117,7 +128,7 @@ const ImageInput = ({
             </AnimatePresence>
 
             {/* Empty State */}
-            {!file && (
+            {!file && !imageUrl && (
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}

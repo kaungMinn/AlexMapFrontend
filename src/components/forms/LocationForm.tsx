@@ -15,7 +15,7 @@ import PageLoading from "../loadings/PageLoading"
 import AskBox from "../modalBox/askBox"
 import { resetLocation } from "@/store/slices/locationSlice"
 import { MAP_ROUTE } from "@/constants/routePaths"
-import { installLocation } from "@/store/actions/locationAction"
+import { getLocation, installLocation, updateLocation } from "@/store/actions/locationAction"
 
 const LocationForm = () => {
     const { handleSubmit, register, setValue, formState: { errors } } = useForm<LocationFormInput>({
@@ -23,13 +23,18 @@ const LocationForm = () => {
         defaultValues: LOCATION_CONSTANTS.form
     });
     const [file, setFile] = useState<FileWithPath | null>(null);
+    const [initialImage, setInitalImage] = useState<string>('')
     const dispatch = useAppDispatch();
     const location = useLocation();
     const navigate = useNavigate();
     const { isLoading, isSuccess, data } = useAppSelector(state => state.location)
 
     const onSubmit = (value: LocationFormInput) => {
-        dispatch(installLocation({ ...value, image: file || '' }));
+        if (location.state && location.state.nodeId) {
+            dispatch(updateLocation({ ...value, _id: location.state.nodeId, image: file || initialImage }))
+        } else {
+            dispatch(installLocation({ ...value, image: file || '' }));
+        }
     }
 
     const handleFileChange = (file: FileWithPath | null) => {
@@ -57,12 +62,33 @@ const LocationForm = () => {
         , [data.locationDetails, navigate, dispatch]);
 
     useEffect(() => {
-        if (location.state && location.state.position && Array.isArray(location.state.position) && location.state.position.length > 0) {
-            const { position } = location.state;
-            setValue('lat', position[0][0]);
-            setValue('lon', position[0][1]);
+        if (location.state) {
+            if (location.state.position && Array.isArray(location.state.position) && location.state.position.length > 0) {
+                const { position } = location.state;
+                setValue('lat', position[0][0]);
+                setValue('lon', position[0][1]);
+            }
+
+            if (location.state.nodeId) {
+                dispatch(getLocation(location.state.nodeId))
+            }
+
         }
-    }, [location.state, setValue]);
+    }, [location.state, setValue, dispatch]);
+
+    useEffect(() => {
+        if (location.state && location.state.nodeId) {
+            setValue('name', data.location.name);
+            setValue('desc', data.location.desc);
+            setValue('displayName', data.location.displayName);
+            setValue('lat', data.location.lat);
+            setValue('lon', data.location.lon);
+            setValue('image', data.location.image);
+            setInitalImage(data.location.image)
+            // setFile(data.location.image)
+        }
+    }, [data.location, location.state, setValue])
+
 
 
     return (
@@ -106,6 +132,7 @@ const LocationForm = () => {
 
             <div className="laptop:col-span-2 col-span-6 h-[27rem] p-5 bg-default rounded-xl shadow-md shadow-gray-300 ">
                 <ImageInput
+                    initialImageUrl={initialImage}
                     maxSizeMB={4}
                     onFileChange={handleFileChange}
                 />
@@ -120,7 +147,7 @@ const LocationForm = () => {
             {isLoading && <PageLoading />}
 
             <AskBox
-                isOpen={isSuccess}
+                isOpen={isSuccess && location.state && !location.state.nodeId}
                 titleLabel="Success."
                 bodyText={data.message}
                 btnOkLabel="Install more"

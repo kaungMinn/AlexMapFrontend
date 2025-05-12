@@ -8,3 +8,4 @@ export const REGISTER_ROUTE = "/register";
 export const MAP_ROUTE = "/map";
 export const INSTALLATION = "/installation"
 export const LIST_ROUTE = "/list";
+export const UPDATE_ROUTE = "/update";

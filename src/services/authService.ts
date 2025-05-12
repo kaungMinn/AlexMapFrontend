@@ -1,4 +1,4 @@
-import { instanceForJSON } from "../api/instance";
+import { generalInstance } from "../api/instance";
 import { getApiInstanceForJSON } from "./api";
 
 const login = async (name: string, password: string) => {
@@ -11,9 +11,14 @@ const logout = async () => {
     return response;
 }
 
+const register = async () => {
+    const response = await getApiInstanceForJSON().get('/auth/register');
+    return response;
+}
+
 const refreshTheToken = async () => {
     try {
-        const response = await instanceForJSON.get('/auth/refresh');
+        const response = await generalInstance.get('/auth/refresh');
         return response;
     } catch (error) {
         console.error("Token refresh failed:", error);
@@ -22,4 +27,4 @@ const refreshTheToken = async () => {
 }
 
 
-export const AuthService = {refreshTheToken, login, logout};
+export const AuthService = {refreshTheToken, login, logout, register};

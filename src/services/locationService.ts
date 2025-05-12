@@ -7,6 +7,11 @@ const getAll = async() => {
     return response;
 }
 
+const get = async(nodeId: string) => {
+    const response = await getApiInstanceForJSON().get(`/node/${nodeId}`);
+    return response;
+}
+
 const create = async (locationData: LocationFormInput) => {
     const response = await getApiInstanceForMultipart().post('/node', locationData);
     return response;
@@ -15,6 +20,6 @@ const create = async (locationData: LocationFormInput) => {
 const update = async (locationData: LocationFormInput) => {
     const response = await getApiInstanceForMultipart().put('/node', locationData);
     return response;
-}
+};
 
-export const LocationService = {create, getAll, update}
+export const LocationService = {create, getAll,get, update}

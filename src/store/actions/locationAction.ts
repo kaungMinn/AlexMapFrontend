@@ -20,6 +20,7 @@ export type LocationDetails = {
 }
 
 export type GetAllLocationsResponseType = {details: LocationDetails[], message: string; success: boolean};
+export type GetLocationResponseType = {details: LocationDetails, message: string; success: boolean};
 export type InstallLocationResponseType = {details: LocationDetails, message: string; success: boolean;}
 export type UpdateLocationResponseType = {details: LocationDetails, message: string; success: boolean;}
 
@@ -31,6 +32,25 @@ export const getALlLocations = createAsyncThunk<GetAllLocationsResponseType, voi
   async (_, { rejectWithValue }) => {
     try {
       const response = await LocationService.getAll();
+      return response.data;
+    } catch (error: unknown) {
+      const validationError = error_helper.check(error);
+      if(validationError){
+        return rejectWithValue(validationError)
+      }
+      throw error;
+    }
+  }
+);
+
+export const getLocation = createAsyncThunk<GetLocationResponseType, string, {
+  rejectValue: AxiosResponse<ValidationError>;
+}
+>(
+  "location/get",
+  async (nodeId, { rejectWithValue }) => {
+    try {
+      const response = await LocationService.get(nodeId);
       return response.data;
     } catch (error: unknown) {
       const validationError = error_helper.check(error);
