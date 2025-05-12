@@ -1,10 +1,11 @@
+import { LatLngExpression } from "leaflet";
 import { useState } from "react";
 
 export type MapAction = "installLocation" | "dragMarker" | "idle"; 
 
 export type MapState = {
     action: MapAction,
-    location: number[]
+    location: LatLngExpression[]
 }
 
 export type HandleMapState = <K extends keyof MapState>(
@@ -12,7 +13,7 @@ export type HandleMapState = <K extends keyof MapState>(
     value: MapState[K]
   ) => void;
 
-export const DEFAULT_MAP_STATE:{action: MapAction, location: number[]} = {action: "idle", location: []}
+export const DEFAULT_MAP_STATE:{action: MapAction, location: LatLngExpression[]} = {action: "idle", location: []}
 
 type HookType = [
     MapState,

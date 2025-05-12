@@ -3,7 +3,7 @@ import { getCookie, setCookie } from "@/utils/storage";
 import { ACCESS_TOKEN } from "@/constants/storage";
 import { jwtDecode } from "jwt-decode";
 import { AuthService } from "./authService";
-import { instanceForJSON } from "@/api/instance";
+import { instanceForJSON, instanceForMultipart } from "@/api/instance";
 
 
 type UserInformationType = {
@@ -58,4 +58,10 @@ export const getApiInstanceForJSON = () => {
   instanceForJSON.interceptors.response.use(onResponse, onResponseError);
 
   return instanceForJSON;
+}
+
+export const getApiInstanceForMultipart = () => {
+  instanceForMultipart.interceptors.request.use(onRequest, onRequestError);
+  instanceForMultipart.interceptors.response.use(onResponse, onResponseError)
+  return instanceForMultipart;
 }

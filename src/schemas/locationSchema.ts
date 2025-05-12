@@ -1,8 +1,10 @@
 import { z } from "zod";
 
 export const form = z.object({
-  name: z.string().min(1).max(100),
+  displayName: z.string().min(1,{message: "Name cannot be empty"}).max(100),
+  name: z.string().optional(),
   desc: z.string().max(500).optional(),
+  image: z.any().optional(),
   lat: z.union([
     z.string()
       .trim()
@@ -19,7 +21,17 @@ export const form = z.object({
       .pipe(z.number().min(-180).max(180)),
     z.number().min(-180).max(180)
   ])
+}).transform((data) => {
+  const name = data.displayName
+    .toLowerCase()  
+    .replace(/\s+/g, ''); 
+  
+  return {
+    ...data,
+    name
+  };
 });
+
 
 
 export const LocationSchema = {form}

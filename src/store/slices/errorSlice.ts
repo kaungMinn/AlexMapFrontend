@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { postLogin } from "../actions/authAction";
+import { getALlLocations, installLocation, updateLocation } from "../actions/locationAction";
 
 type DefaultInitialStateType = {
   isError: boolean;
@@ -12,6 +13,7 @@ const DEFAULT_INITIAL_STATE: DefaultInitialStateType = {
   statusCode: 0,
   errorMessage: "",
 };
+
 
 const errorSlice = createSlice({
   name: "error",
@@ -33,7 +35,37 @@ const errorSlice = createSlice({
             state.statusCode = 500;
             state.errorMessage = "An unexpected error occurred.";
           }
-    })
+    });
+    builder.addCase(installLocation.rejected, (state, action) => {
+      state.isError = true;
+      if (action.payload) {
+        state.statusCode = action.payload.status;
+        state.errorMessage = action.payload.data.message;
+      } else {
+        state.statusCode = 500;
+        state.errorMessage = "An unexpected error occurred.";
+      }
+    });
+    builder.addCase(getALlLocations.rejected, (state, action) => {
+      state.isError = true;
+      if (action.payload) {
+        state.statusCode = action.payload.status;
+        state.errorMessage = action.payload.data.message;
+      } else {
+        state.statusCode = 500;
+        state.errorMessage = "An unexpected error occurred.";
+      }
+    });
+    builder.addCase(updateLocation.rejected, (state, action) => {
+      state.isError = true;
+      if (action.payload) {
+        state.statusCode = action.payload.status;
+        state.errorMessage = action.payload.data.message;
+      } else {
+        state.statusCode = 500;
+        state.errorMessage = "An unexpected error occurred.";
+      }
+    });
   },
 });
 

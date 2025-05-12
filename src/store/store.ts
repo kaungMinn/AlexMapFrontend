@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authSlice from "./slices/authSlice";
 import errorSlice from "./slices/errorSlice";
+import locationSlice from "./slices/locationSlice";
 
 const store = configureStore({
     reducer: {
       auth: authSlice.reducer,
-      error: errorSlice.reducer
+      error: errorSlice.reducer,
+      location: locationSlice.reducer,
     },
   
     middleware: (getDefaultMiddleware) =>

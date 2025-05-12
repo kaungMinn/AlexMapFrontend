@@ -22,7 +22,7 @@ const Login = () => {
         resolver: zodResolver(AuthSchema.login)
     })
 
-    const onSubmit = async (data: LoginFormTypes) => {
+    const onSubmit = (data: LoginFormTypes) => {
         dispatch(postLogin(data))
     }
 

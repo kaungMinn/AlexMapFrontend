@@ -9,19 +9,23 @@ import { handleLogout } from "@/utils/logoutHelper";
 import { GrHostMaintenance } from 'react-icons/gr'
 import { TbLockCancel } from "react-icons/tb";
 import { HiOutlineX } from "react-icons/hi";
+import { BsFullscreenExit } from "react-icons/bs";
+
 
 export const ErrorBoxLayout: React.FC<ErrorBoxLayoutPropsType> = (props) => {
 
     return (
-        <div className="bg-default px-2 py-2 ">
-            <div className="flex flex-col items-center justify-center ">
+        <div className="bg-default px-2 py-2 w-[25rem] h-auto">
+            <div className="space-y-6 ">
                 <div>
                     {props.icon}
                 </div>
 
-                <p className="text-danger px-2 py-1 sub-heading-font">{props.title}</p>
+                <div className="space-y-2">
+                    <p className="sub-heading-font text-center font-semibold text-base_light">{props.title}</p>
 
-                <p className="caption-font text-default_dark">{props.bodyText}</p>
+                    <p className="body-font text-center text-slate-400">{props.bodyText}</p>
+                </div>
             </div>
         </div>
     )
@@ -31,11 +35,9 @@ export const ErrorBoxLayout: React.FC<ErrorBoxLayoutPropsType> = (props) => {
 const UnauthenticatedBox: React.FC<ErrorResponsePropsType> = (err) => {
     return (
         <Box open={err.isError}>
-            <ErrorBoxLayout icon={<FaGripfire size={40} className="text-danger hover:rotate-45 duration-300" />} title="Permission denied!" bodyText={err.errorMessage} />
-
-
-            <div>
-                <div>
+            <ErrorBoxLayout icon={<FaGripfire size={40} className="mx-auto h-auto w-14 text-danger" />} title="Permission denied!" bodyText={err.errorMessage} />
+            <div className="flex justify-center">
+                <div className="h-auto w-1/2">
                     <PrimaryButton label="Logout" handleClickOn={() => handleLogout()} />
                 </div>
             </div>
@@ -48,7 +50,7 @@ const GatewayTimeoutBox: React.FC<ErrorResponsePropsType> = (err) => {
     return (
         <Box open={err.isError}>
             <ErrorBoxLayout
-                icon={<GrHostMaintenance className="h-10 w-10 text-danger" />}
+                icon={<GrHostMaintenance className="mx-auto h-auto w-14 text-danger" />}
                 title="Already Existed!"
                 bodyText="Sorry, our server is currently offline. We're working on it. Please try again later!"
             />
@@ -71,7 +73,7 @@ const PermissionDeniedBox: React.FC<ErrorResponsePropsType> = (err) => {
     return (
         <Box open={err.isError}>
             <ErrorBoxLayout
-                icon={<TbLockCancel className="h-10 w-10 text-warning" />}
+                icon={<TbLockCancel className="mx-auto h-auto w-14 text-danger" />}
                 title="Permission Denied!"
                 bodyText={err.errorMessage}
             />
@@ -96,8 +98,8 @@ const NotFoundBox: React.FC<ErrorResponsePropsType> = (err) => {
     return (
         <Box open={err.isError}>
             <ErrorBoxLayout
-                icon={<HiOutlineX className="h-10 w-10 text-warning" />}
-                title="Permission Denied!"
+                icon={<HiOutlineX className="mx-auto h-auto w-14 text-danger" />}
+                title="Not Found!"
                 bodyText={err.errorMessage}
             />
             <div className="flex justify-center">
@@ -122,7 +124,7 @@ const AlreadyExistBox: React.FC<ErrorResponsePropsType> = (err) => {
     return (
         <Box open={err.isError}>
             <ErrorBoxLayout
-                icon={<HiOutlineX className="h-10 w-10 text-warning" />}
+                icon={<BsFullscreenExit className="mx-auto h-auto w-14 text-danger" />}
                 title="Already Exist!"
                 bodyText={err.errorMessage}
             />
@@ -149,15 +151,15 @@ const CommonBox: React.FC<ErrorResponsePropsType> = (err) => {
         <Box open={err.isError}>
             <ErrorBoxLayout
                 icon={
-                    <FaGripfire />
+                    <FaGripfire className="mx-auto h-auto w-14 text-danger" />
                 }
 
                 title={"Error"}
                 bodyText="Something went wrong"
             />
 
-            <div>
-                <div>
+            <div className="flex justify-center">
+                <div className="h-auto w-1/2">
                     <PrimaryButton label="Try again" handleClickOn={() => dispatch(resetError())} />
                 </div>
             </div>
@@ -166,11 +168,33 @@ const CommonBox: React.FC<ErrorResponsePropsType> = (err) => {
 }
 
 
+const TryAgainBox: React.FC<{ open: boolean; message: string; tryAgain: () => void; }> = ({ open, message, tryAgain }) => {
+    return (
+        <Box open={open}>
+            <ErrorBoxLayout
+                icon={
+                    <FaGripfire className="mx-auto h-auto w-14 text-danger" />
+                }
+
+                title={message}
+                bodyText={"Error"}
+            />
+
+            <div className="flex justify-center">
+                <div className="h-auto w-1/2">
+                    <PrimaryButton label="Try again" handleClickOn={() => tryAgain()} />
+                </div>
+            </div>
+        </Box>
+    )
+}
+
 export {
     CommonBox,
     UnauthenticatedBox,
     GatewayTimeoutBox,
     PermissionDeniedBox,
     NotFoundBox,
-    AlreadyExistBox
+    AlreadyExistBox,
+    TryAgainBox
 }
