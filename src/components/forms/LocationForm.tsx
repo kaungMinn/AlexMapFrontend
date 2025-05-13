@@ -13,9 +13,10 @@ import { useCallback, useEffect, useState } from "react"
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxProvider"
 import PageLoading from "../loadings/PageLoading"
 import AskBox from "../modalBox/askBox"
-import { resetLocation } from "@/store/slices/locationSlice"
+import { resetLocation, resetLocationSoft } from "@/store/slices/locationSlice"
 import { MAP_ROUTE } from "@/constants/routePaths"
 import { getLocation, installLocation, updateLocation } from "@/store/actions/locationAction"
+import SuccessBox from "../modalBox/SuccessBox"
 
 const LocationForm = () => {
     const { handleSubmit, register, setValue, formState: { errors } } = useForm<LocationFormInput>({
@@ -23,12 +24,11 @@ const LocationForm = () => {
         defaultValues: LOCATION_CONSTANTS.form
     });
     const [file, setFile] = useState<FileWithPath | null>(null);
-    const [initialImage, setInitalImage] = useState<string>('')
+    const [initialImage, setInitalImage] = useState<string>('');
     const dispatch = useAppDispatch();
     const location = useLocation();
     const navigate = useNavigate();
     const { isLoading, isSuccess, data } = useAppSelector(state => state.location)
-
     const onSubmit = (value: LocationFormInput) => {
         if (location.state && location.state.nodeId) {
             dispatch(updateLocation({ ...value, _id: location.state.nodeId, image: file || initialImage }))
@@ -38,7 +38,6 @@ const LocationForm = () => {
     }
 
     const handleFileChange = (file: FileWithPath | null) => {
-
         if (file) {
             const formData = new FormData();
             formData.append('image', file);
@@ -61,6 +60,18 @@ const LocationForm = () => {
     }
         , [data.locationDetails, navigate, dispatch]);
 
+    const handleClickOnOk = () => {
+        dispatch(resetLocation());
+        setValue('desc', "");
+        setValue('name', "");
+        setValue('displayName', "");
+        setInitalImage("");
+        setFile(null)
+    }
+
+
+
+    //LIFE_CIRCLES
     useEffect(() => {
         if (location.state) {
             if (location.state.position && Array.isArray(location.state.position) && location.state.position.length > 0) {
@@ -87,7 +98,8 @@ const LocationForm = () => {
             setInitalImage(data.location.image)
             // setFile(data.location.image)
         }
-    }, [data.location, location.state, setValue])
+    }, [data.location, location.state, setValue]);
+
 
 
 
@@ -147,13 +159,20 @@ const LocationForm = () => {
             {isLoading && <PageLoading />}
 
             <AskBox
-                isOpen={isSuccess && location.state && !location.state.nodeId}
+                isOpen={isSuccess && location.state && !location.state.nodeId && data.action === "install"}
                 titleLabel="Success."
                 bodyText={data.message}
-                btnOkLabel="Install more"
+                btnOkLabel="Use again"
                 btnCancelLabel="See on map"
-                clickOnOk={() => { dispatch(resetLocation()) }}
+                clickOnOk={() => { handleClickOnOk() }}
                 clickOnCancel={() => { backToMap() }}
+            />
+
+            <SuccessBox
+                isOpen={isSuccess && (data.action === "update")}
+                titleLabel="Success"
+                bodyText={data.message}
+                clickOn={() => { dispatch(resetLocationSoft()) }}
             />
         </form >
     )

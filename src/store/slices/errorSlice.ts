@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { postLogin } from "../actions/authAction";
+import { postLogin, register } from "../actions/authAction";
 import { getALlLocations, getLocation, installLocation, updateLocation } from "../actions/locationAction";
 
 type DefaultInitialStateType = {
@@ -26,6 +26,8 @@ const errorSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    /* AUTH */
+    //Login
     builder.addCase(postLogin.rejected, (state, action) => {
         state.isError = true;
         if (action.payload) {
@@ -36,16 +38,21 @@ const errorSlice = createSlice({
             state.errorMessage = "An unexpected error occurred.";
           }
     });
-    builder.addCase(installLocation.rejected, (state, action) => {
+    //register
+    builder.addCase(register.rejected, (state, action) => {
       state.isError = true;
       if (action.payload) {
-        state.statusCode = action.payload.status;
-        state.errorMessage = action.payload.data.message;
-      } else {
-        state.statusCode = 500;
-        state.errorMessage = "An unexpected error occurred.";
-      }
+          state.statusCode = action.payload.status;
+          state.errorMessage = action.payload.data.message;
+        } else {
+          state.statusCode = 500;
+          state.errorMessage = "An unexpected error occurred.";
+        }
     });
+
+
+    /* LOCATION NODES */
+    //Get all
     builder.addCase(getALlLocations.rejected, (state, action) => {
       state.isError = true;
       if (action.payload) {
@@ -56,16 +63,7 @@ const errorSlice = createSlice({
         state.errorMessage = "An unexpected error occurred.";
       }
     });
-    builder.addCase(updateLocation.rejected, (state, action) => {
-      state.isError = true;
-      if (action.payload) {
-        state.statusCode = action.payload.status;
-        state.errorMessage = action.payload.data.message;
-      } else {
-        state.statusCode = 500;
-        state.errorMessage = "An unexpected error occurred.";
-      }
-    });
+    //Get
     builder.addCase(getLocation.rejected, (state, action) => {
       state.isError = true;
       if (action.payload) {
@@ -76,6 +74,29 @@ const errorSlice = createSlice({
         state.errorMessage = "An unexpected error occurred.";
       }
     });
+    //Install
+    builder.addCase(installLocation.rejected, (state, action) => {
+      state.isError = true;
+      if (action.payload) {
+        state.statusCode = action.payload.status;
+        state.errorMessage = action.payload.data.message;
+      } else {
+        state.statusCode = 500;
+        state.errorMessage = "An unexpected error occurred.";
+      }
+    });
+    //Update
+    builder.addCase(updateLocation.rejected, (state, action) => {
+      state.isError = true;
+      if (action.payload) {
+        state.statusCode = action.payload.status;
+        state.errorMessage = action.payload.data.message;
+      } else {
+        state.statusCode = 500;
+        state.errorMessage = "An unexpected error occurred.";
+      }
+    });
+
   },
 });
 

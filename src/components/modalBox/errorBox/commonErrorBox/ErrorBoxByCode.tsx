@@ -177,7 +177,7 @@ const TryAgainBox: React.FC<{ open: boolean; message: string; tryAgain: () => vo
                 }
 
                 title={message}
-                bodyText={"Error"}
+                bodyText={"Action needed!"}
             />
 
             <div className="flex justify-center">

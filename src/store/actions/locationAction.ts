@@ -3,21 +3,8 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosResponse } from "axios";
 import { ValidationError } from "./authAction";
 import error_helper from "@/utils/errorHelper";
-import { LocationFormInput } from "@/types/_locationTypes";
+import { LocationDetails, LocationFormInput } from "@/types/_locationTypes";
 
-export type LocationDetails = {
-  _id: string;
-  name: string;
-  displayName: string;
-  desc: string;
-  lat: string | number;
-  lon: string | number;
-  image: string;
-  user?: {
-    displayName: string;
-    _id: string;
-  }
-}
 
 export type GetAllLocationsResponseType = {details: LocationDetails[], message: string; success: boolean};
 export type GetLocationResponseType = {details: LocationDetails, message: string; success: boolean};

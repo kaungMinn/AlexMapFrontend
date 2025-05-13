@@ -56,7 +56,7 @@ const ControlPanel = ({ mapState, handleMapState }: Props) => {
                     mapState.action === "dragMarker" && <div className=" pt-10">
                         {/* <PrimaryButton label="Save Postions" /> */}
                         <div className="w-40 mx-auto">
-                            <SecondaryButton label="Cancel" handleClickOn={() => { handleMapState('action', 'idle') }} /></div>
+                            <SecondaryButton label="Close" handleClickOn={() => { handleMapState('action', 'idle') }} /></div>
                     </div>
                 }
 

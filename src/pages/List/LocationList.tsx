@@ -7,10 +7,12 @@ import { Img } from 'react-image';
 import Loader from '@/icons/animatedIcons/Loader';
 import { MdOutlineImageNotSupported } from "react-icons/md";
 import PageLoading from '@/components/loadings/PageLoading';
-import { FiDelete, FiEdit } from 'react-icons/fi';
+import { FiEdit } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
-import { UPDATE_ROUTE } from '@/constants/routePaths';
+import { MAP_ROUTE, UPDATE_ROUTE } from '@/constants/routePaths';
 import { TryAgainBox } from '@/components/modalBox/errorBox/commonErrorBox/ErrorBoxByCode';
+import { LiaMapMarkerSolid } from "react-icons/lia";
+
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -23,13 +25,11 @@ const ImageRenderer = ({ params }: { params: GroupCellRendererParams }) => {
     </div>
 }
 
-const ActionRenderer = ({ params, handleUpdate }: { params: GroupCellRendererParams, handleUpdate: (params: GroupCellRendererParams) => void }) => {
-
+const ActionRenderer = ({ params, handleUpdate, handleGotoMap }: { params: GroupCellRendererParams, handleUpdate: (params: GroupCellRendererParams) => void, handleGotoMap: (params: GroupCellRendererParams) => void }) => {
     return <div className='flex items-center gap-2 h-full justify-between w-full '>
         <FiEdit size={15} className={`text-primary cursor-pointer`} onClick={() => handleUpdate(params)} />
         <div className='w-[1px] h-full bg-gray-300'></div>
-
-        <FiDelete size={15} className={`text-danger cursor-pointer`} />
+        <LiaMapMarkerSolid size={20} className={`text-success  cursor-pointer`} onClick={() => handleGotoMap(params)} />
     </div>
 }
 
@@ -46,6 +46,14 @@ const LocationList = () => {
         if (params.node.isSelected()) {
             navigate(UPDATE_ROUTE, { state: { nodeId: params.data._id } });
         } else if (!params.node.isSelected()) {
+            setTryAgain(true)
+        }
+    }
+
+    const handleGotoMap = (params: GroupCellRendererParams) => {
+        if (params.node.isSelected()) {
+            navigate(MAP_ROUTE, { state: { position: [[Number(params.data.lat), Number(params.data.lon)]] } })
+        } else {
             setTryAgain(true)
         }
     }
@@ -120,7 +128,7 @@ const LocationList = () => {
             sortable: false,
             resizable: false,
             cellRenderer: (params: GroupCellRendererParams) => {
-                return <ActionRenderer params={params} handleUpdate={handleUpdate} />
+                return <ActionRenderer params={params} handleUpdate={handleUpdate} handleGotoMap={handleGotoMap} />
             }
 
         }
@@ -155,7 +163,7 @@ const LocationList = () => {
             </div>
             {isLoading && <PageLoading />}
 
-            <TryAgainBox open={tryAgain} message='Select the row to update.' tryAgain={() => setTryAgain(false)} />
+            <TryAgainBox open={tryAgain} message='Please select a row.' tryAgain={() => setTryAgain(false)} />
         </div>
     )
 }

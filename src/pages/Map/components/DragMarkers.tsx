@@ -1,8 +1,9 @@
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxProvider"
 import { Marker, Tooltip } from "react-leaflet";
 import L from 'leaflet';
-import { Pin } from "./Pin"
-import { getALlLocations, LocationDetails, updateLocation } from "@/store/actions/locationAction"
+import { Plane } from "./Pin"
+import { getALlLocations, updateLocation } from "@/store/actions/locationAction"
+import { LocationDetails } from "@/types/_locationTypes";
 
 const DragableMarker = ({ location }: { location: LocationDetails }) => {
     const dispatch = useAppDispatch();
@@ -14,9 +15,10 @@ const DragableMarker = ({ location }: { location: LocationDetails }) => {
     }
 
 
-    return <Marker key={location._id} position={[Number(location.lat), Number(location.lon)]} icon={Pin} draggable={true} eventHandlers={{ dragend: handleDragEnd }} >
+    return <Marker key={location._id} position={[Number(location.lat), Number(location.lon)]} icon={Plane} draggable={true} eventHandlers={{ dragend: handleDragEnd }} >
         <Tooltip>
-            {location.displayName}
+            <p className="text-default bg-primary p-2 rounded-md inline-block me-4">{location.displayName}</p>
+            {location.lat}-{location.lon}
         </Tooltip>
     </Marker>
 }

@@ -9,12 +9,14 @@ type ImageUploadProps = {
     maxSizeMB?: number;
     initialImageUrl?: string | null; // Add prop for existing image URL
     onFileChange: (file: FileWithPath | null) => void;
+    forceRM?: boolean;
 };
 
 const ImageInput = ({
     maxSizeMB = 5,
     initialImageUrl = null,
     onFileChange,
+    forceRM
 }: ImageUploadProps) => {
     const [file, setFile] = useState<FileWithPath | null>(null);
     const [imageUrl, setImageUrl] = useState<string | null>(null); // For displaying URLs
@@ -26,6 +28,14 @@ const ImageInput = ({
             setImageUrl(initialImageUrl);
         }
     }, [initialImageUrl]);
+
+    useEffect(() => {
+        if (forceRM) {
+            setFile(null);
+            setImageUrl(null);
+            onFileChange(null);
+        }
+    }, [forceRM, setFile, setImageUrl, onFileChange])
 
     const onDrop = useCallback(
         (acceptedFiles: FileWithPath[], rejectedFiles: unknown[]) => {

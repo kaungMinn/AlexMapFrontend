@@ -1,8 +1,9 @@
+import { LoginFormTypes, RegisterFormTypes } from "@/types/_authTypes";
 import { generalInstance } from "../api/instance";
 import { getApiInstanceForJSON } from "./api";
 
-const login = async (name: string, password: string) => {
-    const response = await getApiInstanceForJSON().post('/auth/login', {name, password});
+const login = async (payload: LoginFormTypes) => {
+    const response = await getApiInstanceForJSON().post('/auth/login', payload);
     return response;
 }   
 
@@ -11,8 +12,8 @@ const logout = async () => {
     return response;
 }
 
-const register = async () => {
-    const response = await getApiInstanceForJSON().get('/auth/register');
+const register = async (payload: RegisterFormTypes) => {
+    const response = await getApiInstanceForJSON().post('/auth/register', payload);
     return response;
 }
 
