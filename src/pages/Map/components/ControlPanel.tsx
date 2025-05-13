@@ -18,7 +18,6 @@ const ControlPanel = ({ mapState, handleMapState }: Props) => {
 
     const handleInstallLocation = () => {
         if (mapState.location.length > 0 && mapState.action === 'installLocation') {
-            console.log(mapState)
             navigate(INSTALLATION, { state: { mode: "Installation", position: mapState.location } });
         } else {
             setIsAsking(true)

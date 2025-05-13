@@ -52,7 +52,6 @@ const Map = () => {
             //Purposely doing this for multi nodes in the future XD
             const tmpLocation: LatLngExpression[] = [];
             tmpLocation.push([latlng.lat, latlng.lng]);
-            console.log("tmpLoc", tmpLocation)
             handleMapState('location', tmpLocation);
         }
     };

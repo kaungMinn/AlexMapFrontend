@@ -30,7 +30,6 @@ const onRequest = async (
 
   if (isExpired) {
     const response = await AuthService.refreshTheToken();
-    console.log("response", response)
     const accessToken = response?.data.details.accessToken;
     setCookie(ACCESS_TOKEN, accessToken);
     config.headers!.Authorization = `Bearer ${accessToken}`;
