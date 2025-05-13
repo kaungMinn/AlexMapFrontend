@@ -1,6 +1,6 @@
 import { AgGridReact } from 'ag-grid-react';
-import { ModuleRegistry, AllCommunityModule, ColDef, RowSelectionOptions, GroupCellRendererParams } from 'ag-grid-community';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ModuleRegistry, AllCommunityModule, ColDef, GroupCellRendererParams } from 'ag-grid-community';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/hooks/reduxProvider';
 import { getALlLocations } from '@/store/actions/locationAction';
 import { Img } from 'react-image';
@@ -10,7 +10,6 @@ import PageLoading from '@/components/loadings/PageLoading';
 import { FiEdit } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { MAP_ROUTE, UPDATE_ROUTE } from '@/constants/routePaths';
-import { TryAgainBox } from '@/components/modalBox/errorBox/commonErrorBox/ErrorBoxByCode';
 import { LiaMapMarkerSolid } from "react-icons/lia";
 
 
@@ -35,7 +34,6 @@ const ActionRenderer = ({ params, handleUpdate, handleGotoMap }: { params: Group
 
 const LocationList = () => {
 
-    const [tryAgain, setTryAgain] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
     const gridRef = useRef<AgGridReact | null>(null);
     const dispatch = useAppDispatch();
@@ -43,19 +41,11 @@ const LocationList = () => {
     const { data: { allLocations }, isLoading } = useAppSelector(state => state.location);
 
     const handleUpdate = (params: GroupCellRendererParams) => {
-        if (params.node.isSelected()) {
-            navigate(UPDATE_ROUTE, { state: { nodeId: params.data._id } });
-        } else if (!params.node.isSelected()) {
-            setTryAgain(true)
-        }
+        navigate(UPDATE_ROUTE, { state: { nodeId: params.data._id } });
     }
 
     const handleGotoMap = (params: GroupCellRendererParams) => {
-        if (params.node.isSelected()) {
-            navigate(MAP_ROUTE, { state: { position: [[Number(params.data.lat), Number(params.data.lon)]] } })
-        } else {
-            setTryAgain(true)
-        }
+        navigate(MAP_ROUTE, { state: { position: [[Number(params.data.lat), Number(params.data.lon)]] } })
     }
 
     const onFilterTextBoxChanged = useCallback(() => {
@@ -64,12 +54,6 @@ const LocationList = () => {
             "quickFilterText",
             filterTextBox?.value,
         );
-    }, []);
-
-    const rowSelection = useMemo((): RowSelectionOptions => {
-        return {
-            mode: 'singleRow',
-        };
     }, []);
 
 
@@ -159,11 +143,11 @@ const LocationList = () => {
             <input type='text' id='filter-text-box' onInput={onFilterTextBoxChanged} className='p-2 w-[20rem] secondary-font mb-2 outline-none rounded-md shadow-md shadow-gray-300' placeholder='Search..' />
             <div className="h-[35rem] w-full shadow-sm shadow-gray-300 rounded-lg overflow-hidden">
 
-                <AgGridReact ref={gridRef} columnDefs={colDefs} rowData={allLocations} rowSelection={rowSelection} pagination={!isMobile} paginationPageSize={20} />
+                <AgGridReact ref={gridRef} columnDefs={colDefs} rowData={allLocations} pagination={!isMobile} paginationPageSize={20} />
             </div>
             {isLoading && <PageLoading />}
 
-            <TryAgainBox open={tryAgain} message='Please select a row.' tryAgain={() => setTryAgain(false)} />
+            {/* <TryAgainBox open={tryAgain} message='Please select a row.' tryAgain={() => setTryAgain(false)} /> */}
         </div>
     )
 }
