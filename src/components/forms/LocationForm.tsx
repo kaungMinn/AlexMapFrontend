@@ -29,6 +29,8 @@ const LocationForm = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { isLoading, isSuccess, data } = useAppSelector(state => state.location)
+
+
     const onSubmit = (value: LocationFormInput) => {
         if (location.state && location.state.nodeId) {
             dispatch(updateLocation({ ...value, _id: location.state.nodeId, image: file || initialImage }))

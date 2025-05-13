@@ -26,6 +26,8 @@ const Login = () => {
         dispatch(postLogin(data))
     }
 
+    /* Life circles */
+
     useEffect(() => {
         if (isSuccess) {
             navigate(MAP_ROUTE);
