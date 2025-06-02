@@ -13,3 +13,6 @@ cd your-repo
 change .env.txt to .env
 npm install
 npm run dev
+
+
+## CREDENTIALS ARE NOT IMPORTANT HERE BECAUSE I USED THE GMAIL I NO LONGER USE.
